@@ -1,0 +1,31 @@
+---
+title: "Forecasting Competition"
+author: "Elise Boos"
+date: "2023-03-30"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r package, message=FALSE, warning=FALSE}
+library(lubridate)
+library(ggplot2)
+library(forecast)  
+library(Kendall)
+library(tseries)
+library(outliers)
+library(tidyverse)
+library(smooth)
+library(zoo)
+library(kableExtra)
+```
+
+## Import and Wrangle Data
+
+```{r import}
+
+```
+
+
