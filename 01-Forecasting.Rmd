@@ -20,12 +20,27 @@ library(tidyverse)
 library(smooth)
 library(zoo)
 library(kableExtra)
+library(readxl)
 ```
 
 ## Import and Wrangle Data
 
-```{r import}
+```{r import and wrangle}
+#read in data
+load <- read_xlsx("./Competition/Data/load.xlsx")
 
+#wrangle to summarize to daily 
+load <- load %>% 
+  mutate(date = ymd(date)) %>% 
+  mutate(daily = rowMeans(load[,3:26])) %>%
+  select(meter_id, date, daily)
+
+#create ts 
+f <- first(load$date)
+
+msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2009,12,31), seasonal.periods =c(7,365.25))
+
+msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
 
 
