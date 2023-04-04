@@ -38,8 +38,10 @@ load <- load %>%
 #create ts 
 f <- first(load$date)
 
+#training dataset
 msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2010,1,1), seasonal.periods =c(7,365.25))
 
+#full dataset 
 msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
 
