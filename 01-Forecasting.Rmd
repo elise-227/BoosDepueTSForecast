@@ -1,6 +1,6 @@
 ---
 title: "Forecasting Competition"
-author: "Elise Boos"
+author: "Elise Boos and Justin DePue"
 date: "2023-03-30"
 output: pdf_document
 ---
