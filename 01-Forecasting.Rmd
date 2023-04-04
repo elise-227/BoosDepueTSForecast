@@ -53,7 +53,7 @@ checkresiduals(arima)
 ARIMA_forecast <- forecast(object = arima, h = 59)
 
 #visualize 
-autoplot(msts_full) +
+autoplot(msts) +
     autolayer(ARIMA_forecast,series="ARIMA",PI=FALSE) +
     ylab("Unit") +
     xlab("") +
