@@ -45,7 +45,8 @@ msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2010,1,1), s
 msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
 
-#Test Forecasts 
+
+#ARIMA
 
 ```{r forecast 1}
 #test on till 2010
@@ -62,14 +63,25 @@ autoplot(msts_full) +
 
 ```
 
-# Run the good models 
 
 ```{r good models}
 #run on whole data
-arima <- auto.arima(msts_full)
+arima <- auto.arima(msts_full,seasonal=FALSE, 
+                             lambda=0,
+                             xreg=fourier(msts_full, 
+                                          K=c(2,2)))
 arima
 checkresiduals(arima)
-ARIMA_forecast <- forecast(object = arima, h = 59)
+
+ARIMA_forecast <- forecast(arima,
+                           xreg=fourier(msts_full,
+                                        K=c(2,2),
+                                        h=59),
+                           h=59
+                           ) 
+#ARIMA_forecast <- forecast(object = arima, h = 59)
+
+
 
 autoplot(msts_full) +
     autolayer(ARIMA_forecast,series="ARIMA",PI=FALSE) +
@@ -78,13 +90,14 @@ autoplot(msts_full) +
     labs(col="Model")
 
 forecast_arima <- as.data.frame(ARIMA_forecast$mean)
-#write.csv(forecast_arima, "Competition/Output/forecast_arima.csv")
+write.csv(forecast_arima, "Competition/Output/forecast_arima_5.csv")
 ```
+
+#STL + ETS
 
 ```{r test forecast 2}
 
 # Test STL + ETS Model
-
 ets_model <-  stlf(msts, h=59)
 
 #Plot foresting results
@@ -114,5 +127,40 @@ autoplot(msts_full) +
 
 forecast_ETS <- as.data.frame(ets_model$mean)
 write.csv(forecast_ETS, "Competition/Output/forecast_ETS.csv")
+```
+
+#TBATS
+
+```{r tbats}
+TBATS_fit <- tbats(msts_full)
+
+TBATS_for <- forecast(msts_full, h=59)
+
+autoplot(msts_full) +
+    autolayer(TBATS_for,series="TBATS",PI=FALSE) +
+    ylab("Unit") +
+    xlab("") +
+    labs(col="Model")
+
+forecast_tbats <- as.data.frame(TBATS_for$mean)
+#write.csv(forecast_tbats, "Competition/Output/forecast_tbats.csv")
+```
+
+# Neural Network 
+```{r nn}
+NN_fit <- nnetar(msts_full,p=1,P=0,xreg=fourier(msts_full, K=c(2,2)))
+
+#NN_for <- forecast(NN_fit, h=365) 
+NN_for <- forecast(NN_fit, h=59,xreg=fourier(msts_full, 
+                                          K=c(2,2),h=59))
+
+autoplot(msts_full) +
+    autolayer(NN_for,series="NN",PI=FALSE) +
+    ylab("Unit") +
+    xlab("") +
+    labs(col="Model")
+
+forecast_NN <- as.data.frame(NN_for$mean)
+#write.csv(forecast_NN, "Competition/Output/forecast_NN.csv")
 ```
 
