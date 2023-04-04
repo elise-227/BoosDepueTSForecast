@@ -38,7 +38,7 @@ load <- load %>%
 #create ts 
 f <- first(load$date)
 
-msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2009,12,31), seasonal.periods =c(7,365.25))
+msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2010,1,1), seasonal.periods =c(7,365.25))
 
 msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
@@ -47,10 +47,10 @@ msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.period
 
 ```{r forecast 1}
 #test on till 2010
-arima <- auto.arima(msts)
+arima <- auto.arima(window(msts, end = c(2009,1)))
 arima
 checkresiduals(arima)
-ARIMA_forecast <- forecast(object = arima, h = 59)
+ARIMA_forecast <- forecast(object = arima, h = 365)
 
 #visualize 
 autoplot(msts) +
