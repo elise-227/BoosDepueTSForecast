@@ -113,6 +113,6 @@ autoplot(msts_full) +
   ylab("Unit")
 
 forecast_ETS <- as.data.frame(ets_model$mean)
-write.csv(forecast_ETS, "Competition/Output/forecast_ETS.csv")
+#write.csv(forecast_ETS, "Competition/Output/forecast_ETS.csv")
 ```
 
