@@ -43,6 +43,8 @@ msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2009,12,31),
 msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
 
+#Test Forecasts 
+
 ```{r forecast 1}
 #test on till 2010
 arima <- auto.arima(msts)
@@ -57,7 +59,7 @@ autoplot(msts_full) +
     labs(col="Model")
 ```
 
-
+# Run the good models 
 
 ```{r good models}
 #run on whole data
