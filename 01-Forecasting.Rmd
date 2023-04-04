@@ -43,4 +43,36 @@ msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2009,12,31),
 msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
 
+```{r forecast 1}
+#test on till 2010
+arima <- auto.arima(msts)
+arima
+checkresiduals(arima)
+ARIMA_forecast <- forecast(object = arima, h = 59)
+
+autoplot(msts_full) +
+    autolayer(ARIMA_forecast,series="ARIMA",PI=FALSE) +
+    ylab("Unit") +
+    xlab("") +
+    labs(col="Model")
+```
+
+
+
+```{r good models}
+#run on whole data
+arima <- auto.arima(msts_full)
+arima
+checkresiduals(arima)
+ARIMA_forecast <- forecast(object = arima, h = 59)
+
+autoplot(msts_full) +
+    autolayer(ARIMA_forecast,series="ARIMA",PI=FALSE) +
+    ylab("Unit") +
+    xlab("") +
+    labs(col="Model")
+
+forecast_arima <- as.data.frame(ARIMA_forecast$mean)
+#write.csv(forecast_arima, "Competition/Output/forecast_arima.csv")
+```
 
