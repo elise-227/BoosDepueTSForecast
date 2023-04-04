@@ -52,12 +52,12 @@ arima
 checkresiduals(arima)
 ARIMA_forecast <- forecast(object = arima, h = 59)
 
-#visualize 
-autoplot(msts) +
+autoplot(msts_full) +
     autolayer(ARIMA_forecast,series="ARIMA",PI=FALSE) +
     ylab("Unit") +
     xlab("") +
     labs(col="Model")
+
 ```
 
 # Run the good models 
@@ -69,7 +69,6 @@ arima
 checkresiduals(arima)
 ARIMA_forecast <- forecast(object = arima, h = 59)
 
-#visualize
 autoplot(msts_full) +
     autolayer(ARIMA_forecast,series="ARIMA",PI=FALSE) +
     ylab("Unit") +
@@ -77,7 +76,41 @@ autoplot(msts_full) +
     labs(col="Model")
 
 forecast_arima <- as.data.frame(ARIMA_forecast$mean)
-#save forecasting numbers 
 #write.csv(forecast_arima, "Competition/Output/forecast_arima.csv")
+```
+
+```{r test forecast 2}
+
+# Test STL + ETS Model
+
+ets_model <-  stlf(msts, h=59)
+
+#Plot foresting results
+autoplot(ets_model) + ylab("Unit")
+checkresiduals(ets_model)
+
+#Plot model + observed data
+autoplot(msts_full) +
+  autolayer(ets_model, series="STL + ETS",PI=FALSE) +
+  ylab("Unit")
+
+```
+
+```{r Full forecast 2}
+# Full Data STL + ETS Model
+
+ets_model <-  stlf(msts_full, h=59)
+
+#Plot foresting results
+autoplot(ets_model) + ylab("Unit")
+checkresiduals(ets_model)
+
+#Plot model + observed data
+autoplot(msts_full) +
+  autolayer(ets_model, series="STL + ETS",PI=FALSE) +
+  ylab("Unit")
+
+forecast_ETS <- as.data.frame(ets_model$mean)
+write.csv(forecast_ETS, "Competition/Output/forecast_ETS.csv")
 ```
 
