@@ -62,6 +62,11 @@ temp_edit <- temp %>%
   select(date, hr, meantemp) %>%
   group_by(date) %>%
   summarise(temp_daily = mean(meantemp))
+
+alldata <- left_join(load, rh_edit, by ="date")
+alldata <- left_join(alldata,temp_edit, by = "date")
+
+msts_alldata <- msts(alldata[,3:5],start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
 
 
@@ -179,6 +184,24 @@ autoplot(msts_full) +
     labs(col="Model")
 
 forecast_NN <- as.data.frame(NN_for$mean)
-#write.csv(forecast_NN, "Competition/Output/forecast_NN.csv")
+write.csv(forecast_NN, "Competition/Output/forecast_NN.csv")
+```
+
+```{r nn w variables}
+NN_fit <- nnetar(msts_alldata[,1],p=1,P=0,xreg=fourier(msts_alldata[,2], K=c(2,1)))
+
+#NN_for <- forecast(NN_fit, h=365) 
+NN_for <- forecast(NN_fit, h=59,xreg=fourier(msts_alldata[,2], 
+                                          K=c(2,1),h=59))
+
+autoplot(msts_alldata[,1]) +
+    autolayer(NN_for,series="NN",PI=FALSE) +
+    ylab("Unit") +
+    xlab("") +
+    labs(col="Model")
+
+forecast_NN <- as.data.frame(NN_for$mean)
+write.csv(forecast_NN, "Competition/Output/forecast_NN_wrh.csv")
+
 ```
 
