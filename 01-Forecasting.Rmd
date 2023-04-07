@@ -45,6 +45,25 @@ msts <- msts(load$daily,start = c(year(f),month(f),day(f)), end = c(2010,1,1), s
 msts_full <- msts(load$daily,start = c(year(f),month(f),day(f)), seasonal.periods =c(7,365.25))
 ```
 
+```{r wrangle weather}
+rh <- read_xlsx("./Competition/Data/relative_humidity.xlsx")
+temp <- read_xlsx("./Competition/Data/temperature.xlsx")
+
+rh_edit <- rh %>% 
+  mutate(date = ymd(date)) %>% 
+  mutate(meanrh = rowMeans(rh[,3:30])) %>%
+  select(date, hr, meanrh) %>%
+  group_by(date) %>%
+  summarise(rh_daily = mean(meanrh))
+
+temp_edit <- temp %>% 
+  mutate(date = ymd(date)) %>% 
+  mutate(meantemp = rowMeans(rh[,3:30])) %>%
+  select(date, hr, meantemp) %>%
+  group_by(date) %>%
+  summarise(temp_daily = mean(meantemp))
+```
+
 
 #ARIMA
 
